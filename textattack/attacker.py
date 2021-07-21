@@ -26,11 +26,11 @@ def dump(obj, file, protocol=None):
     print(obj)
     print(file)
     print(bytesio_to_stringio(protocol))
-    ForkingPickler2(file, protocol).dump(obj)
+    Pickler(file, protocol).dump(obj)
 
 
 class Pickle2Reducer(AbstractReducer):
-    ForkingPickler = ForkingPickler2
+    ForkingPickler = ForkingPickler
     register = ForkingPickler2.register
     dump = dump
     
