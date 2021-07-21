@@ -10,11 +10,8 @@ from cloudpickle import CloudPickler as Pickler
 #from pickle import Pickler
 
 def bytesio_to_stringio(bytes_str):
-    data = io.BytesIO(bytes_str)
-    # Create an instance of io.TextIOWrapper class.
-    text_wrapper = io.TextIOWrapper(data, encoding='utf-8')
-    str = text_wrapper.read()
-    return str
+    data = bytes_str.read()
+    return data
 
 class ForkingPickler2(Pickler):
     dispatch = Pickler.dispatch.copy()
