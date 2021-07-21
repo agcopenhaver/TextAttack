@@ -22,7 +22,7 @@ class ForkingPickler2(Pickler):
             self.save_reduce(obj=obj, *rv)
         cls.dispatch[type] = dispatcher
 
-def dump(obj, file, protocol):
+def dump(obj, file, protocol=None):
     print(obj)
     print(file)
     print(bytesio_to_stringio(protocol))
