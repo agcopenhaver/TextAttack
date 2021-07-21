@@ -24,7 +24,7 @@ class ForkingPickler2(Pickler):
 class Pickle2Reducer(AbstractReducer):
     ForkingPickler = ForkingPickler2
     register = ForkingPickler2.register
-    dump = Pickler.dump
+    #dump = Pickler.dump
     
     
 class PickleProtocol2Reducer(AbstractReducer):
