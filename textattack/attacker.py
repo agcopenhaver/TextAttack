@@ -20,7 +20,7 @@ class ForkingPickler2(Pickler):
 #mp.reduction.ForkingPickler = ForkingPickler2
 
 def dump(obj, file, protocol=None):
-    CloudPickler(file, protocol=protocol).dump(obj)
+    Pickler(file, protocol=protocol).dump(obj)
 
 
 class Pickle2Reducer(AbstractReducer):
