@@ -19,17 +19,12 @@ class ForkingPickler2(Pickler):
 
 #mp.reduction.ForkingPickler = ForkingPickler2
 
-def dump(obj, file, protocol=4, buffer_callback=None):
-    print(obj)
-    print(protocol)
-    print(buffer_callback)
-    CloudPickler(file, protocol=4, buffer_callback).dump(obj)
 
 
 class Pickle2Reducer(AbstractReducer):
     ForkingPickler = ForkingPickler2
     register = ForkingPickler2.register
-    dump = dump
+    dump = Pickler.dump
     
     
 class PickleProtocol2Reducer(AbstractReducer):
