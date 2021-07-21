@@ -16,8 +16,13 @@ class ForkingPickler2(Pickler):
             rv = reduce(obj)
             self.save_reduce(obj=obj, *rv)
         cls.dispatch[type] = dispatcher
+    @classmethod
+    def dumps(cls, obj, protocol=None):
+        return ForkingPickler.dumps(obj, protocol)
 
-#mp.reduction.ForkingPickler = ForkingPickler2
+
+def dump(obj, file, protocol=None):
+    ForkingPickler2(file, protocol).dump(obj)
 
 
 
