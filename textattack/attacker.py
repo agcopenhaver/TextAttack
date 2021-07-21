@@ -5,7 +5,6 @@ import logging
 #pickle.Pickler = cloudpickle.CloudPickler
 import multiprocessing as mp
 
-from mp import reduction
 from cloudpickle import CloudPickler as Pickler
 class ForkingPickler2(Pickler):
     dispatch = Pickler.dispatch.copy()
@@ -16,7 +15,7 @@ class ForkingPickler2(Pickler):
             self.save_reduce(obj=obj, *rv)
         cls.dispatch[type] = dispatcher
 
-reduction.ForkingPickler = ForkingPickler2
+mp.reduction.ForkingPickler = ForkingPickler2
 import os
 import queue
 import random
