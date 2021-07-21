@@ -1,7 +1,7 @@
 import collections
 import logging
 #import cloudpickle
-#import pickle
+import pickle
 #pickle.Pickler = cloudpickle.CloudPickler
 import multiprocessing as mp
 from multiprocessing.reduction import ForkingPickler, AbstractReducer
@@ -19,7 +19,7 @@ class ForkingPickler2(Pickler):
 
 #mp.reduction.ForkingPickler = ForkingPickler2
 
-def dump(obj, file, protocol=-1):
+def dump(obj, file, protocol=pickle.HIGHEST_PROTOCOL):
     ForkingPickler2(file, protocol).dump(obj)
 
 
