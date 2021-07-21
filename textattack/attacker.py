@@ -18,6 +18,9 @@ class ForkingPickler2(Pickler):
         cls.dispatch[type] = dispatcher
 
 def dump(obj, file, protocol, buffer_callback=None):
+    print(obj)
+    print(file)
+    print(protocol)
     ForkingPickler2(file, protocol, buffer_callback).dump(obj)
 
 
