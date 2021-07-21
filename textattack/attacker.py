@@ -19,7 +19,7 @@ class ForkingPickler2(Pickler):
 
 #mp.reduction.ForkingPickler = ForkingPickler2
 
-def dump(obj, file, protocol=pickle.HIGHEST_PROTOCOL):
+def dump(obj, file, protocol=3):
     ForkingPickler2(file, protocol).dump(obj)
 
 
