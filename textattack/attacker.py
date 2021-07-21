@@ -5,9 +5,17 @@ import pickle
 #pickle.Pickler = cloudpickle.CloudPickler
 import multiprocessing as mp
 from multiprocessing.reduction import ForkingPickler, AbstractReducer
-
+import io
 from cloudpickle import CloudPickler as Pickler
 #from pickle import Pickler
+
+def bytesio_to_stringio(bytes_str):
+    data = io.BytesIO(bytes_str)
+    # Create an instance of io.TextIOWrapper class.
+    text_wrapper = io.TextIOWrapper(data, encoding='utf-8')
+    str = text_wrapper.read()
+    return str
+
 class ForkingPickler2(Pickler):
     dispatch = Pickler.dispatch.copy()
     @classmethod
@@ -20,7 +28,7 @@ class ForkingPickler2(Pickler):
 def dump(obj, file, protocol):
     print(obj)
     print(file)
-    print(protocol)
+    print(bytesio_to_stringio(protocol))
     ForkingPickler2(file, protocol).dump(obj)
 
 
