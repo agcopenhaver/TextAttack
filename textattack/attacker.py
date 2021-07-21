@@ -5,7 +5,8 @@ import logging
 #pickle.Pickler = cloudpickle.CloudPickler
 import multiprocessing as mp
 
-from cloudpickle import CloudPickler as Pickler
+#from cloudpickle import CloudPickler as Pickler
+from dill import Pickler as Pickler
 class ForkingPickler2(Pickler):
     dispatch = Pickler.dispatch.copy()
     @classmethod
