@@ -22,6 +22,8 @@ class ForkingPickler2(Pickler):
 
 
 def dump(obj, file, protocol=None):
+    print(ojb)
+    print(file)
     ForkingPickler2(file, protocol).dump(obj)
 
 
