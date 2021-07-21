@@ -31,7 +31,7 @@ def dump(obj, file, protocol=None):
 
 class Pickle2Reducer(AbstractReducer):
     ForkingPickler = ForkingPickler
-    register = ForkingPickler2.register
+    register = ForkingPickler.register
     dump = dump
     
     
