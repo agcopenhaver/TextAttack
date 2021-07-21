@@ -20,7 +20,9 @@ class ForkingPickler2(Pickler):
 #mp.reduction.ForkingPickler = ForkingPickler2
 
 def dump(obj, file, protocol=4, buffer_callback=None):
-
+    print(obj)
+    print(protocol)
+    print(buffer_callback)
     CloudPickler(file, protocol=4, buffer_callback).dump(obj)
 
 
