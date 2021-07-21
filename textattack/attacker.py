@@ -17,10 +17,15 @@ class ForkingPickler2(Pickler):
             self.save_reduce(obj=obj, *rv)
         cls.dispatch[type] = dispatcher
 
-def dump(obj, file, protocol=None):
-    print(obj)
-    print(file)
-    ForkingPickler2(file, protocol).dump(obj)
+def dump(obj, file, protocol=None, buffer_callback=None):
+        """Serialize obj as bytes streamed into file
+        protocol defaults to cloudpickle.DEFAULT_PROTOCOL which is an alias to
+        pickle.HIGHEST_PROTOCOL. This setting favors maximum communication
+        speed between processes running the same Python version.
+        Set protocol=pickle.DEFAULT_PROTOCOL instead if you need to ensure
+        compatibility with older versions of Python.
+        """
+    ForkingPickler2(file, protocol=protocol, buffer_callback=buffer_callback).dump(obj)
 
 
 
