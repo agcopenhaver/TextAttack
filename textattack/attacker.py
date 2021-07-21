@@ -17,7 +17,7 @@ class ForkingPickler2(Pickler):
             self.save_reduce(obj=obj, *rv)
         cls.dispatch[type] = dispatcher
 
-def dump(obj, file, protocol=None, buffer_callback=None):
+def dump(obj, file, protocol, buffer_callback=None):
     ForkingPickler2(file, protocol, buffer_callback).dump(obj)
 
 
