@@ -8,36 +8,38 @@ from multiprocessing.reduction import ForkingPickler, AbstractReducer
 
 from cloudpickle import CloudPickler as Pickler
 #from pickle import Pickler
-#class ForkingPickler2(Pickler):
-   # dispatch = Pickler.dispatch.copy()
-   # @classmethod
-   # def register(cls, type, reduce):
-       # def dispatcher(self, obj):
-         #   rv = reduce(obj)
-         #   self.save_reduce(obj=obj, *rv)
-        #cls.dispatch[type] = dispatcher
+class ForkingPickler2(Pickler):
+    dispatch = Pickler.dispatch.copy()
+    @classmethod
+    def register(cls, type, reduce):
+        def dispatcher(self, obj):
+            rv = reduce(obj)
+            self.save_reduce(obj=obj, *rv)
+        cls.dispatch[type] = dispatcher
 
 #mp.reduction.ForkingPickler = ForkingPickler2
 
-#def dump(obj, file, protocol=4):
- #   ForkingPickler2(file, protocol).dump(obj)
+def dump(obj, file, protocol=None):
+    CloudPickler(file, protocol=protocol).dump(obj)
 
 
-#class Pickle2Reducer(AbstractReducer):
-   # ForkingPickler = ForkingPickler2
-   # register = ForkingPickler2.register
-   # dump = dump
+class Pickle2Reducer(AbstractReducer):
+    ForkingPickler = ForkingPickler2
+    register = ForkingPickler2.register
+    dump = dump
     
     
 class PickleProtocol2Reducer(AbstractReducer):
     def get_pickler_class(self):
         return Pickler
     
-mp.set_reducer(PickleProtocol2Reducer())
+import multiprocessing as mp
 
+#ctx = mp.get_context()
+#ctx.reducer = pickle2reducer.Pickle2Reducer()
 #multiprocessing.set_reducer(PickleProtocol2Reducer())
     
-#mp.context._default_context.reducer = Pickle2Reducer()
+mp.context._default_context.reducer = Pickle2Reducer()
 import os
 import random
 import traceback
