@@ -100,7 +100,7 @@ class HuggingFaceDataset(Dataset):
         else:
             self._name = name_or_dataset
             self._subset = subset
-            self._dataset = datasets.load_dataset(self._name, subset)[split]
+            self._dataset = datasets.load_dataset(self._name, subset, keep_in_memory=True)[split]
             subset_print_str = f", subset {_cb(subset)}" if subset else ""
             textattack.shared.logger.info(
                 f"Loading {_cb('datasets')} dataset {_cb(self._name)}{subset_print_str}, split {_cb(split)}."
