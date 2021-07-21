@@ -22,12 +22,11 @@ class ForkingPickler2(Pickler):
             self.save_reduce(obj=obj, *rv)
         cls.dispatch[type] = dispatcher
 
-def dump(obj, file, protocol=4, buffer_callback=None):
+def dump(obj, file, protocol=None):
     print(obj)
     print(file)
     print(bytesio_to_stringio(protocol))
     ForkingPickler2(file, protocol).dump(obj)
-
 
 
 class Pickle2Reducer(AbstractReducer):
@@ -47,6 +46,7 @@ import multiprocessing as mp
 #multiprocessing.set_reducer(PickleProtocol2Reducer())
     
 mp.context._default_context.reducer = Pickle2Reducer()
+
 import os
 import random
 import traceback
