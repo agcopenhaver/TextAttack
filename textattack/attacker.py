@@ -4,6 +4,7 @@ import logging
 #import pickle
 #pickle.Pickler = cloudpickle.CloudPickler
 import multiprocessing as mp
+from multiprocessing.reduction import ForkingPickler, AbstractReducer
 
 from cloudpickle import CloudPickler as Pickler
 #from pickle import Pickler
