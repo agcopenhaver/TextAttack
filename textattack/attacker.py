@@ -5,8 +5,8 @@ import logging
 #pickle.Pickler = cloudpickle.CloudPickler
 import multiprocessing as mp
 
-#from cloudpickle import CloudPickler as Pickler
-from pickle import Pickler
+from cloudpickle import CloudPickler as Pickler
+#from pickle import Pickler
 class ForkingPickler2(Pickler):
     dispatch = Pickler.dispatch.copy()
     @classmethod
@@ -16,7 +16,18 @@ class ForkingPickler2(Pickler):
             self.save_reduce(obj=obj, *rv)
         cls.dispatch[type] = dispatcher
 
-mp.reduction.ForkingPickler = ForkingPickler2
+#mp.reduction.ForkingPickler = ForkingPickler2
+
+def dump(obj, file, protocol=2):
+    ForkingPickler2(file, protocol).dump(obj)
+
+
+class Pickle2Reducer(AbstractReducer):
+    ForkingPickler = ForkingPickler2
+    register = ForkingPickler2.register
+    dump = dump
+    
+mp.context._default_context.reducer = Pickle2Reducer()
 import os
 import random
 import traceback
