@@ -1,5 +1,8 @@
 import collections
 import logging
+import cloudpickle
+import pickle
+pickle.Pickler = cloudpickle.CloudPickler
 import multiprocessing as mp
 import os
 import queue
