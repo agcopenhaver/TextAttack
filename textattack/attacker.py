@@ -15,7 +15,7 @@ class ForkingPickler2(Pickler):
             self.save_reduce(obj=obj, *rv)
         cls.dispatch[type] = dispatcher
 
-#mp.reduction.ForkingPickler = ForkingPickler2
+mp.reduction.ForkingPickler = ForkingPickler2
 import os
 import random
 import traceback
