@@ -40,7 +40,7 @@ class PickleProtocol2Reducer(AbstractReducer):
         return Pickler
     
 ctx = mp.get_context()
-ctx.reducer = pickle2reducer.Pickle2Reducer()
+ctx.reducer = Pickle2Reducer()
 #multiprocessing.set_reducer(PickleProtocol2Reducer())
     
 mp.context._default_context.reducer = Pickle2Reducer()
