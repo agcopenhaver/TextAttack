@@ -22,11 +22,11 @@ class ForkingPickler2(Pickler):
             self.save_reduce(obj=obj, *rv)
         cls.dispatch[type] = dispatcher
 
-def dump(obj, file, protocol=None):
+def dump(obj, file, protocol=None, *, fix_imports=True, buffer_callback=None):
     print(obj)
     print(file)
     print(bytesio_to_stringio(protocol))
-    Pickler(file, protocol=4).dump(obj)
+    Pickler(file, protocol).dump(obj))
 
 
 class Pickle2Reducer(AbstractReducer):
