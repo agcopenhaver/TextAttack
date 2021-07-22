@@ -26,7 +26,7 @@ def dump(obj, file, protocol=None, *, fix_imports=True, buffer_callback=None):
     print(obj)
     print(file)
     print(bytesio_to_stringio(protocol))
-    Pickler(file, protocol).dump(obj))
+    Pickler(file, protocol).dump(obj)
 
 
 class Pickle2Reducer(AbstractReducer):
