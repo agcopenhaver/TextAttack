@@ -39,8 +39,8 @@ class PickleProtocol2Reducer(AbstractReducer):
     def get_pickler_class(self):
         return Pickler
     
-#ctx = mp.get_context()
-#ctx.reducer = pickle2reducer.Pickle2Reducer()
+ctx = mp.get_context()
+ctx.reducer = pickle2reducer.Pickle2Reducer()
 #multiprocessing.set_reducer(PickleProtocol2Reducer())
     
 mp.context._default_context.reducer = Pickle2Reducer()
@@ -320,7 +320,7 @@ class Attacker:
         torch.cuda.empty_cache()
 
         # Start workers.
-        worker_pool = torch.multiprocessing.Pool(
+        worker_pool = ctx.Pool(
             num_workers,
             attack_from_queue,
             (
