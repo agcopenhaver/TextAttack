@@ -4,7 +4,7 @@ import logging
 import pickle
 #pickle.Pickler = cloudpickle.CloudPickler
 import multiprocessing as mp
-import alts.third_party.cloudpickle_torch_multiprocessing as ctmp
+import torch.multiprocessing as ctmp
 import os
 import random
 import traceback
