@@ -4,47 +4,7 @@ import logging
 import pickle
 #pickle.Pickler = cloudpickle.CloudPickler
 import multiprocessing as mp
-from multiprocessing.reduction import ForkingPickler, AbstractReducer
-import io
-from cloudpickle import CloudPickler as Pickler
-#from pickle import Pickler
-
-def bytesio_to_stringio(bytes_str):
-    data = bytes_str.read()
-    return data
-
-class ForkingPickler2(Pickler):
-    dispatch = Pickler.dispatch.copy()
-    @classmethod
-    def register(cls, type, reduce):
-        def dispatcher(self, obj):
-            rv = reduce(obj)
-            self.save_reduce(obj=obj, *rv)
-        cls.dispatch[type] = dispatcher
-
-def dump(obj, file, protocol=None, *, fix_imports=True, buffer_callback=None):
-    print(obj)
-    print(file)
-    print(bytesio_to_stringio(protocol))
-    ForkingPickler2(file, protocol=None).dump(obj)
-
-
-class Pickle2Reducer(AbstractReducer):
-    ForkingPickler = ForkingPickler2
-    register = ForkingPickler2.register
-    #dump = Pickler(file, protocol=None).dump(obj)
-    
-    
-class PickleProtocol2Reducer(AbstractReducer):
-    def get_pickler_class(self):
-        return Pickler
-    
-ctx = mp.get_context('spawn')
-ctx.reducer = Pickle2Reducer()
-#multiprocessing.set_reducer(PickleProtocol2Reducer())
-    
-mp.context._default_context.reducer = Pickle2Reducer()
-
+import alts.third_party.cloudpickle_torch_multiprocessing as ctmp
 import os
 import random
 import traceback
@@ -293,8 +253,8 @@ class Attacker:
                     self.attack_args.shuffle,
                 )
 
-        in_queue = torch.multiprocessing.Queue()
-        out_queue = torch.multiprocessing.Queue()
+        in_queue = ctmp.Queue()
+        out_queue = ctmp.Queue()
         for i in worklist:
             try:
                 example, ground_truth_output = self.dataset[i]
@@ -548,8 +508,8 @@ class Attacker:
 def pytorch_multiprocessing_workaround():
     # This is a fix for a known bug
     try:
-        torch.multiprocessing.set_start_method("spawn", force=True)
-        torch.multiprocessing.set_sharing_strategy("file_system")
+        ctmp.set_start_method("spawn", force=True)
+        ctmp.set_sharing_strategy("file_system")
     except RuntimeError:
         pass
 
@@ -560,7 +520,7 @@ def set_env_variables(gpu_id):
         os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
     # Set sharing strategy to file_system to avoid file descriptor leaks
-    torch.multiprocessing.set_sharing_strategy("file_system")
+    ctmp.set_sharing_strategy("file_system")
 
     # Only use one GPU, if we have one.
     # For Tensorflow
@@ -593,10 +553,10 @@ def attack_from_queue(
         attack, Attack
     ), f"`attack` must be of type `Attack`, but got type `{type(attack)}`."
 
-    gpu_id = (torch.multiprocessing.current_process()._identity[0] - 1) % num_gpus
+    gpu_id = (ctmp.current_process()._identity[0] - 1) % num_gpus
     set_env_variables(gpu_id)
     textattack.shared.utils.set_seed(attack_args.random_seed)
-    if torch.multiprocessing.current_process()._identity[0] > 1:
+    if ctmp.current_process()._identity[0] > 1:
         logging.disable()
 
     attack.cuda_()
