@@ -280,7 +280,7 @@ class Attacker:
         torch.cuda.empty_cache()
 
         # Start workers.
-        worker_pool = ctx.Pool(
+        worker_pool = ctmp.Pool(
             num_workers,
             attack_from_queue,
             (
