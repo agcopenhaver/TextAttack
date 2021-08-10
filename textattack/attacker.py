@@ -274,7 +274,7 @@ class Attacker:
         logger.info(f"Running {num_workers} worker(s) on {num_gpus} GPU(s).")
 
         # Lock for synchronization
-        lock = mp.Lock()
+        lock = cmp.Lock()
 
         # We move Attacker (and its components) to CPU b/c we don't want models using wrong GPU in worker processes.
         self.attack.cpu_()
