@@ -509,7 +509,7 @@ def pytorch_multiprocessing_workaround():
     # This is a fix for a known bug
     try:
         cmp.set_start_method("spawn", force=True)
-        #cmp.set_sharing_strategy("file_system")
+        torch.multiprocessing.set_sharing_strategy("file_system")
     except RuntimeError:
         pass
 
@@ -520,7 +520,7 @@ def set_env_variables(gpu_id):
         os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
     # Set sharing strategy to file_system to avoid file descriptor leaks
-    cmp.set_sharing_strategy("file_system")
+    torch.multiprocessing.set_sharing_strategy("file_system")
 
     # Only use one GPU, if we have one.
     # For Tensorflow
