@@ -509,7 +509,7 @@ class Attacker:
 def pytorch_multiprocessing_workaround():
     # This is a fix for a known bug
     try:
-        cloudpickle_multiprocess.set_start_method("spawn", force=True)
+        cmp.set_start_method("spawn", force=True)
         cmp.set_sharing_strategy("file_system")
     except RuntimeError:
         pass
