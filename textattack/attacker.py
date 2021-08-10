@@ -3,8 +3,9 @@ import logging
 #import cloudpickle
 import pickle
 #pickle.Pickler = cloudpickle.CloudPickler
-import multiprocessing as mp
-import cloudpickle_multiprocess as cmp
+#import multiprocessing as mp
+import cloudpickle_multiprocess
+import alts.third_party.cloudpickle_torch_multiprocessing as cmp
 import os
 import random
 import traceback
@@ -508,8 +509,8 @@ class Attacker:
 def pytorch_multiprocessing_workaround():
     # This is a fix for a known bug
     try:
-        cmp.set_start_method("spawn", force=True)
-        torch.multiprocessing.set_sharing_strategy("file_system")
+        cloudpickle_multiprocess.set_start_method("spawn", force=True)
+        cmp.set_sharing_strategy("file_system")
     except RuntimeError:
         pass
 
