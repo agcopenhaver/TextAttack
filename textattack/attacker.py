@@ -553,10 +553,10 @@ def attack_from_queue(
         attack, Attack
     ), f"`attack` must be of type `Attack`, but got type `{type(attack)}`."
 
-    gpu_id = (cmp.current_process()._identity[0] - 1) % num_gpus
+    gpu_id = (torch.multiprocessing.current_process()._identity[0] - 1) % num_gpus
     set_env_variables(gpu_id)
     textattack.shared.utils.set_seed(attack_args.random_seed)
-    if cmp.current_process()._identity[0] > 1:
+    if torch.multiprocessing.current_process()._identity[0] > 1:
         logging.disable()
 
     attack.cuda_()
