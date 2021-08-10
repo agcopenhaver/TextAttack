@@ -521,7 +521,7 @@ def set_env_variables(gpu_id):
         os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
     # Set sharing strategy to file_system to avoid file descriptor leaks
-    torch.multiprocessing.set_sharing_strategy("file_system")
+    cmp.set_sharing_strategy("file_system")
 
     # Only use one GPU, if we have one.
     # For Tensorflow
@@ -554,10 +554,10 @@ def attack_from_queue(
         attack, Attack
     ), f"`attack` must be of type `Attack`, but got type `{type(attack)}`."
 
-    gpu_id = (torch.multiprocessing.current_process()._identity[0] - 1) % num_gpus
+    gpu_id = (cmp.current_process()._identity[0] - 1) % num_gpus
     set_env_variables(gpu_id)
     textattack.shared.utils.set_seed(attack_args.random_seed)
-    if torch.multiprocessing.current_process()._identity[0] > 1:
+    if cmp.current_process()._identity[0] > 1:
         logging.disable()
 
     attack.cuda_()
