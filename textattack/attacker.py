@@ -288,7 +288,7 @@ class Attacker:
                 self.attack,
                 self.attack_args,
                 num_gpus,
-                mp.Value("i", 1, lock=False),
+                cmp.Value("i", 1, lock=False),
                 lock,
                 in_queue,
                 out_queue,
