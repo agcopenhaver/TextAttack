@@ -4,7 +4,7 @@ import logging
 import pickle
 #pickle.Pickler = cloudpickle.CloudPickler
 import multiprocessing as mp
-import torch.multiprocessing as ctmp
+import cloudpickle_multiprocess as cmp
 import os
 import random
 import traceback
@@ -253,8 +253,8 @@ class Attacker:
                     self.attack_args.shuffle,
                 )
 
-        in_queue = ctmp.Queue()
-        out_queue = ctmp.Queue()
+        in_queue = cmp.Queue()
+        out_queue = cmp.Queue()
         for i in worklist:
             try:
                 example, ground_truth_output = self.dataset[i]
@@ -280,7 +280,7 @@ class Attacker:
         torch.cuda.empty_cache()
 
         # Start workers.
-        worker_pool = ctmp.Pool(
+        worker_pool = cmp.Pool(
             num_workers,
             attack_from_queue,
             (
@@ -508,8 +508,8 @@ class Attacker:
 def pytorch_multiprocessing_workaround():
     # This is a fix for a known bug
     try:
-        ctmp.set_start_method("spawn", force=True)
-        ctmp.set_sharing_strategy("file_system")
+        cmp.set_start_method("spawn", force=True)
+        #cmp.set_sharing_strategy("file_system")
     except RuntimeError:
         pass
 
@@ -520,7 +520,7 @@ def set_env_variables(gpu_id):
         os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
     # Set sharing strategy to file_system to avoid file descriptor leaks
-    ctmp.set_sharing_strategy("file_system")
+    cmp.set_sharing_strategy("file_system")
 
     # Only use one GPU, if we have one.
     # For Tensorflow
@@ -553,10 +553,10 @@ def attack_from_queue(
         attack, Attack
     ), f"`attack` must be of type `Attack`, but got type `{type(attack)}`."
 
-    gpu_id = (ctmp.current_process()._identity[0] - 1) % num_gpus
+    gpu_id = (cmp.current_process()._identity[0] - 1) % num_gpus
     set_env_variables(gpu_id)
     textattack.shared.utils.set_seed(attack_args.random_seed)
-    if ctmp.current_process()._identity[0] > 1:
+    if cmp.current_process()._identity[0] > 1:
         logging.disable()
 
     attack.cuda_()
