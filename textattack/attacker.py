@@ -262,7 +262,9 @@ class Attacker:
                 example = textattack.shared.AttackedText(example)
                 if self.dataset.label_names is not None:
                     example.attack_attrs["label_names"] = self.dataset.label_names
+                print((i, example, ground_truth_output))
                 in_queue.put((i, example, ground_truth_output))
+                print(in_queue)
             except IndexError:
                 raise IndexError(
                     f"Tried to access element at {i} in dataset of size {len(self.dataset)}."
