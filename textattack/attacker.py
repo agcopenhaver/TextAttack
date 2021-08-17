@@ -3,7 +3,7 @@ import logging
 #import cloudpickle
 import pickle
 #pickle.Pickler = cloudpickle.CloudPickler
-#import multiprocessing as mp
+import multiprocessing as mp
 import cloudpickle_multiprocess
 import alts.third_party.cloudpickle_torch_multiprocessing as cmp
 import os
@@ -290,7 +290,7 @@ class Attacker:
                 self.attack,
                 self.attack_args,
                 num_gpus,
-                cmp.Value("i", 1, lock=False),
+                mp.Value("i", 1, lock=False),
                 lock,
                 in_queue,
                 out_queue,
