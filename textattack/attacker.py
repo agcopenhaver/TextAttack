@@ -283,18 +283,11 @@ class Attacker:
         torch.cuda.empty_cache()
 
         # Start workers.
-        worker_pool = cmp.Pool(
-            num_workers,
-            attack_from_queue,
-            (
-                self.attack,
-                self.attack_args,
-                num_gpus,
-                mp.Value("i", 1, lock=False),
-                lock,
-                in_queue,
-                out_queue,
-            ),
+        worker_pool=cmp.Pool
+        (
+            processes=num_workers,
+            initializer=attack_from_queue, 
+            initargs=(self.attack,self.attack_args,num_gpus,mp.Value("i", 1, lock=False),lock,in_queue,out_queue,),
         )
 
         # Log results asynchronously and update progress bar.
