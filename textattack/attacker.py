@@ -281,15 +281,17 @@ class Attacker:
         # We move Attacker (and its components) to CPU b/c we don't want models using wrong GPU in worker processes.
         self.attack.cpu_()
         torch.cuda.empty_cache()
-
+        
+        def setup(t, l):
+            global total, lock
+            total = t
+            lock = l
         # Start workers.
-        worker_pool=cmp.Pool
-        (
-            processes=num_workers,
-            initializer=attack_from_queue, 
-            initargs=(self.attack,self.attack_args,num_gpus, 1 ,lock,in_queue,out_queue,), 
-        )
-#mp.Value("i", 1, lock=False)
+        total = cmp.Value('i', 1)
+        worker_pool = cmp.Pool(processes=num_workers, initializer=setup, initargs=[total, lock])
+        worker_pool.map(attack_from_queue(self.attack,self.attack_args, num_gpus, in_queue,out_queue)
+
+        
         # Log results asynchronously and update progress bar.
         if self._checkpoint:
             num_results = self._checkpoint.results_count
@@ -543,7 +545,7 @@ def set_env_variables(gpu_id):
 
 
 def attack_from_queue(
-    attack, attack_args, num_gpus, first_to_start, lock, in_queue, out_queue
+    attack, attack_args, num_gpus, in_queue, out_queue
 ):
     assert isinstance(
         attack, Attack
@@ -559,12 +561,12 @@ def attack_from_queue(
 
     # Simple non-synchronized check to see if it's the first process to reach this point.
     # This let us avoid waiting for lock.
-    if bool(first_to_start)#.value):
+    if bool(first_to_start.value):
         # If it's first process to reach this step, we first try to acquire the lock to update the value.
         with lock:
             # Because another process could have changed `first_to_start=False` while we wait, we check again.
-            if bool(first_to_start)#.value):
-                #first_to_start.value = 0
+            if bool(first_to_start.value):
+                first_to_start.value = 0
                 first_to_start = 0
                 if not attack_args.silent:
                     print(attack, "\n")
